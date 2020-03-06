@@ -1,6 +1,5 @@
 from fbchat import Client, log
 from fbchat.models import *
-import credentials
 import Crypto
 
 class Bot(Client):
@@ -15,10 +14,10 @@ class Bot(Client):
 
         reply = 'nghai, wyd now'
 
-        if author_id != self.uid and author_id == 100000515967471: # (kate)
-            self.send(Message(text=reply), thread_id=thread_id, thread_type=thread_type)
+        #if author_id != self.uid and author_id == 100000515967471: # (kate)
+        #    self.send(Message(text=reply), thread_id=thread_id, thread_type=thread_type)
 
-        self.markAsDelivered(author_id, thread_id)
+        #self.markAsDelivered(author_id, thread_id)
 
 print("type your email: ")
 email = input()
