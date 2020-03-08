@@ -10,7 +10,7 @@ def integerToBase64(num):
     return str(b64.b64encode(bytes), "utf-8")
 
 
-#convert base64 to int
+# convert base64 to int
 def base64ToInteger(string):
     bytes = string.encode("utf-8")
     decoded = b64.b64decode(bytes)
@@ -19,7 +19,6 @@ def base64ToInteger(string):
 
 # mode, 0 = public only, 1 = private only, 2 = all
 def keyToString(key, mode):
-
     string = ""
 
     publicKey = key.publickey()
@@ -29,13 +28,13 @@ def keyToString(key, mode):
 
     if key.has_private and mode != 0:
         privateKeyPEM = key.exportKey()
-        string +=(privateKeyPEM.decode('ascii'))
+        string += (privateKeyPEM.decode('ascii'))
 
     return string
 
 
-def exportKeyToFile(key, path, name):
-    f = open(path + name + ".pem", 'w')
+def exportKeyToFile(key, name):
+    f = open(name + ".pem", 'wb')
     f.write(key.exportKey('PEM'))
     f.close()
 
@@ -56,6 +55,7 @@ def encryptMessage(msg, key):
 
     return str(b64.b64encode(encrypted), "ascii")
 
+
 def decryptMessage(msg, key):
     bytes64 = msg.encode("ascii")
     bytes = b64.b64decode(bytes64)
@@ -66,7 +66,6 @@ def decryptMessage(msg, key):
 
 
 def interactive():
-
     while 1:
         print("1) gen a key\n2)encrypt message\n3)decrypt message\n")
         option = input("enter an option: ")
@@ -83,10 +82,9 @@ def interactive():
 
 
 # key = RSA.generate(2048)
+# print(keyToString(key, 2))
 # interactive()
 
-f = open('keytest.txt', 'r')
-string = f.read().split("-----BEGIN RSA PRIVATE KEY-----")[0]
-print(string)
-key = stringToPublicKey(string)
+# key = importKeyFromFile("personalKey.pem")
 
+# print(keyToString(key, 2))

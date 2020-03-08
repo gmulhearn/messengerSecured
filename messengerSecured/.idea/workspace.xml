@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c72232fe-7045-45e2-a8d2-271b464e41dc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/friendKeys.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/personalKey.pem" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RSAencryption.py" beforeDir="false" afterPath="$PROJECT_DIR$/RSAencryption.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messengerSecured.py" beforeDir="false" afterPath="$PROJECT_DIR$/messengerSecured.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mykeyfile.asc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -150,7 +149,8 @@
       <workItem from="1583397842549" duration="2381000" />
       <workItem from="1583466310901" duration="933000" />
       <workItem from="1583467270348" duration="5663000" />
-      <workItem from="1583473409750" duration="3412000" />
+      <workItem from="1583473409750" duration="3898000" />
+      <workItem from="1583654985400" duration="10105000" />
     </task>
     <servers />
   </component>
@@ -162,7 +162,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
