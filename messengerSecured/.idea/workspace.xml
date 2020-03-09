@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c72232fe-7045-45e2-a8d2-271b464e41dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/friendKeys.txt" beforeDir="false" afterPath="$PROJECT_DIR$/friendKeys.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messengerSecured.py" beforeDir="false" afterPath="$PROJECT_DIR$/messengerSecured.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/personalKey.pem" beforeDir="false" afterPath="$PROJECT_DIR$/personalKey.pem" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,7 +28,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../playground/messengerSecured-2nd-client" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -151,7 +151,9 @@
       <workItem from="1583654985400" duration="10225000" />
       <workItem from="1583723102291" duration="1351000" />
       <workItem from="1583724603242" duration="601000" />
-      <workItem from="1583733515019" duration="450000" />
+      <workItem from="1583733515019" duration="1600000" />
+      <workItem from="1583743984848" duration="5375000" />
+      <workItem from="1583749986148" duration="848000" />
     </task>
     <servers />
   </component>

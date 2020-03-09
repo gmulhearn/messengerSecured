@@ -3,6 +3,7 @@ from fbchat.models import *
 import Crypto
 import RSAencryption
 import getpass
+import datetime
 
 # todo:
 # add list of pending requests to verify responses
@@ -93,7 +94,31 @@ class Bot(Client):
             print("{}) {}".format(i, result.name))
             i += 1
 
-    def interactive(self):
+    def handleMessage(self, messageObject, author_id, thread_id, thread_type, mostRecentFlag):
+        if author_id != self.uid:
+
+            if str(messageObject.text).startswith("-----BEGIN PUBLIC KEY-----") and mostRecentFlag:
+                # handle errors
+                self.processKeyReturn(author_id, thread_type, thread_type, messageObject.text)
+
+            if str(messageObject.text) == "-----PUBLIC KEY REQUEST-----" and mostRecentFlag:
+                self.respondKeyRequest(author_id, thread_id, thread_type)
+                return
+
+        try:
+            decryptedMsg = RSAencryption.decryptMessage(messageObject.text, key)
+            # print("decrypted message: {}".format(decryptedMsg))
+            print('"{}" from {} at {} *secured*\n'.format(decryptedMsg,
+                                                          self.fetchUserInfo(messageObject.author).get(
+                                                              messageObject.author).name,
+                                                          messageObject.timestamp))
+        except:
+            print('"{}" from {} at {} *unsecured*\n'.format(messageObject.text,
+                                                            self.fetchUserInfo(messageObject.author).get(
+                                                                messageObject.author).name,
+                                                            messageObject.timestamp))
+
+    def interactiveMode1(self):
         while 1:
             thread_id = input("enter thread id: ")
             if input("enter thread type: ('user' or 'group'") == 'user':
@@ -103,6 +128,55 @@ class Bot(Client):
             msg = input("type msg: ")
 
             self.send(Message(text=msg), thread_id=thread_id, thread_type=thread_type)
+
+    def interactiveMode2(self):
+        # option to view threads or to search for thread/user (fetch thread list)
+        # interact in thread, list recent messages (fetchThreadMessages)
+        while 1:
+            print("s) Search...")
+            i = 1
+            threads = self.fetchThreadList(offset=0, limit=10)
+            for thread in threads:
+                print("{}) {}".format(i, thread.name))
+                i += 1
+            print("l) Logout safely")
+            choice = input("select an option: ")
+
+            if choice == "s":
+                # search functionality here
+                pass
+            elif choice == "l":
+                self.logout()
+                return
+                # fix to exit
+            # check if int
+            elif 0 < int(choice) < 11:
+                thread = threads[int(choice) - 1]
+                while 1:
+                    print("\n\n\nconversation with {}".format(thread.name))
+                    messages = self.fetchThreadMessages(thread.uid, limit=10)
+                    messages.reverse()
+
+                    msgNum = 1
+                    for message in messages:
+                        lastMsgFlag = msgNum == 10
+                        self.handleMessage(message, message.author, thread.uid, thread.type, lastMsgFlag)
+                        msgNum += 1
+                        # print('"{}" from {} at {}\n'.format(message.text,
+                        #                                    self.fetchUserInfo(message.author).get(message.author).name,
+                        #                                    message.timestamp))  # fix timestamp-ing
+
+                    print("\nr) refresh messages... \ns) send message to thread... \nb) go back...")
+                    choice2 = input("select an option: ")
+                    if choice2 == "r":
+                        pass
+                    elif choice2 == "s":
+                        msg = input("type msg: ")
+                        # self.send(Message(text=msg), thread_id=thread.uid, thread_type=thread.type)
+                        self.sendEncryptedMsg(thread.uid, thread.uid, thread.type, msg)
+
+                    elif choice2 == "b":
+                        break
 
 
 def startKey():
@@ -118,7 +192,7 @@ def startKey():
 def startUp():
     startKey()
 
-    print(RSAencryption.keyToString(key, 0))
+    # print(RSAencryption.keyToString(key, 0))
 
     print("type your email: ")
     email = input()
@@ -130,11 +204,11 @@ def startUp():
 
     client = Bot(email, password)
 
-    client.searchUsers()
+    # client.searchUsers()
 
-    client.listen()
+    # client.listen()
 
-    # client.interactive()
+    client.interactiveMode2()
 
 
 startUp()
