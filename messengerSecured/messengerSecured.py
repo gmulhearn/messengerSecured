@@ -2,6 +2,7 @@ from fbchat import Client, log
 from fbchat.models import *
 import Crypto
 import RSAencryption
+import getpass
 
 # todo:
 # add list of pending requests to verify responses
@@ -14,6 +15,7 @@ key = 0
 class Bot(Client):
     global key
 
+    # gen "cock and ball torture" if "cock and ball torture" == true then me = happy
     def onMessage(self, author_id=None, message_object=None, thread_id=None,
                   thread_type=ThreadType.USER, **kwargs):
 
@@ -42,7 +44,7 @@ class Bot(Client):
 
             if input("reply to user {}? (y/n)".format(author_id)) == 'y':
                 # self.send(Message(text=input("type a msg: ")), thread_id=thread_id, thread_type=thread_type)
-                self.sendEncryptedMsg(author_id,thread_id, thread_type, input("type a msg: "))
+                self.sendEncryptedMsg(author_id, thread_id, thread_type, input("type a msg: "))
 
         self.markAsDelivered(author_id, thread_id)
 
@@ -51,7 +53,6 @@ class Bot(Client):
         reqString = "-----PUBLIC KEY REQUEST-----"
         # send request msg
         self.send(Message(text=reqString), thread_id=thread_id, thread_type=thread_type)
-
 
     def processKeyReturn(self, userID, thread_id, thread_type, keyMsg):
         # handle if user already exists
@@ -62,11 +63,9 @@ class Bot(Client):
         file.close()
         print("added key details for user: {}".format(userID))
 
-
     def respondKeyRequest(self, userID, thread_id, thread_type):
         resString = RSAencryption.keyToString(key, 0)
         self.send(Message(text=resString), thread_id=thread_id, thread_type=thread_type)
-
 
     def sendEncryptedMsg(self, userID, thread_id, thread_type, msg):
 
@@ -85,6 +84,14 @@ class Bot(Client):
             print("public key for this user not found, sending a key request now...")
             print("please try again after the user returns their public key")
             self.requestUserKey(userID, thread_id, thread_type)
+
+    def searchUsers(self):
+        searchResults = self.searchForUsers(input("enter a name: "))
+        print("Search results: ")
+        i = 1
+        for result in searchResults:
+            print("{}) {}".format(i, result.name))
+            i += 1
 
     def interactive(self):
         while 1:
@@ -117,10 +124,13 @@ def startUp():
     email = input()
 
     print("type your password: ")
-    password = input()
+    password = getpass.getpass()
+
+    print("\n\n\n\n\n\n\n\n\n\n")
 
     client = Bot(email, password)
 
+    client.searchUsers()
 
     client.listen()
 
