@@ -17,7 +17,7 @@ key = 0
 
 class Bot(Client):
     global key
-    messageLog = dict()  # dictionary of threadID paired with list of messages, try open from json first
+    messageLog = dict()  # dictionary of threadID paired with list of messages formatted as dict, try open from json 1st
     friendKeyLog = dict()  # dictionary of threadID paired with public key to encrypt with
 
     def onMessage(self, author_id=None, message_object=None, thread_id=None,
@@ -25,11 +25,12 @@ class Bot(Client):
         print("new message received!")
 
         # add to logged messages
+        dictMsg = self.messageToDict(message_object)
         try:
-            self.messageLog[thread_id].append(message_object)
+            self.messageLog[thread_id].append(dictMsg)
         except:
             self.messageLog[thread_id] = []
-            self.messageLog[thread_id].append(message_object)
+            self.messageLog[thread_id].append(dictMsg)
 
         # print(self.messageLog)
 
@@ -46,6 +47,11 @@ class Bot(Client):
                 self.messageLog = json.load(json_file)
         except json.JSONDecodeError:
             print("no recoverable stored messages in messageLog.txt")
+
+    # convert message fbchat object to dictionary object format for json
+    def messageToDict(self, message_object):
+        return {'uid': message_object.uid, 'text': message_object.text, 'author': message_object.author,
+                'timestamp': message_object.timestamp}
 
     # message to send to users who dont have their public key in your friendsKeys log
     def requestUserKey(self, thread_id, thread_type):
@@ -123,7 +129,8 @@ class Bot(Client):
 
         for message in messages:
             if not emptyThreadFlag:
-                if message.uid == self.messageLog[thread.uid][-1].uid:  # if message id = most recent message in log
+                if message.uid == self.messageLog[thread.uid][-1].get(
+                        'uid'):  # if message id = most recent message in log
                     break
             messageNumToAdd += 1
 
@@ -131,7 +138,7 @@ class Bot(Client):
             self.messageLog[thread.uid] = []
 
         for i in range(messageNumToAdd, -1, -1):
-            self.messageLog[thread.uid].append(messages[i])
+            self.messageLog[thread.uid].append(self.messageToDict(messages[i]))
 
     def interactiveMessagingThread(self, thread):
         while 1:
