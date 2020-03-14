@@ -4,10 +4,12 @@ import Crypto
 import RSAencryption
 import getpass
 import datetime
+import threading
+import json
 
 # todo:
 # add list of pending requests to verify responses
-#
+# cache messages
 
 
 key = 0
@@ -15,76 +17,62 @@ key = 0
 
 class Bot(Client):
     global key
+    messageLog = dict()  # dictionary of threadID paired with list of messages, try open from json first
+    friendKeyLog = dict()  # dictionary of threadID paired with public key to encrypt with
 
-    # gen "cock and ball torture" if "cock and ball torture" == true then me = happy
     def onMessage(self, author_id=None, message_object=None, thread_id=None,
                   thread_type=ThreadType.USER, **kwargs):
+        print("new message received!")
 
-        self.markAsRead(author_id)
+        # add to logged messages
+        try:
+            self.messageLog[thread_id].append(message_object)
+        except:
+            self.messageLog[thread_id] = []
+            self.messageLog[thread_id].append(message_object)
 
-        if author_id != self.uid:
+        # print(self.messageLog)
 
-            msgText = message_object.text
-
-            print("Message {} received from {} in {}".format(msgText, self.fetchUserInfo(author_id).get(author_id).name,
-                                                             thread_type))
-
-            if str(msgText).startswith("-----BEGIN PUBLIC KEY-----"):
-                # handle errors
-                self.processKeyReturn(author_id, thread_type, thread_type, msgText)
-
-            if str(msgText) == "-----PUBLIC KEY REQUEST-----":
-                self.respondKeyRequest(author_id, thread_id, thread_type)
-                return
-
-            try:
-                decryptedMsg = RSAencryption.decryptMessage(msgText, key)
-                print("decrypted message: {}".format(decryptedMsg))
-            except:
-                print("error decrypting")
-
-            if input("reply to user {}? (y/n)".format(author_id)) == 'y':
-                # self.send(Message(text=input("type a msg: ")), thread_id=thread_id, thread_type=thread_type)
-                self.sendEncryptedMsg(author_id, thread_id, thread_type, input("type a msg: "))
-
-        self.markAsDelivered(author_id, thread_id)
+    def loadKeyLog(self):
+        try:
+            with open('friendKeys.txt') as json_file:
+                self.friendKeyLog = json.load(json_file)
+        except json.JSONDecodeError:
+            print("no recoverable stored keys in friendKeys.txt")
 
     # message to send to users who dont have their public key in your friendsKeys log
-    def requestUserKey(self, userID, thread_id, thread_type):
+    def requestUserKey(self, thread_id, thread_type):
         reqString = "-----PUBLIC KEY REQUEST-----"
         # send request msg
         self.send(Message(text=reqString), thread_id=thread_id, thread_type=thread_type)
 
-    def processKeyReturn(self, userID, thread_id, thread_type, keyMsg):
-        # handle if user already exists
-        # handle formatting of msg
-        file = open("friendKeys.txt", "a+")
-        string = "user: {}\n{}\n".format(userID, keyMsg)
-        file.write(string)
-        file.close()
-        print("added key details for user: {}".format(userID))
+    def processKeyReturn(self, threadID, keyMsg):
 
-    def respondKeyRequest(self, userID, thread_id, thread_type):
+        if self.friendKeyLog.get(threadID) is not None:
+            pass  # handle existing
+        else:
+            self.friendKeyLog[threadID] = keyMsg
+        print("added key details for thread: {}".format(threadID))
+
+        with open('friendKeys.txt', 'w') as outfile:
+            json.dump(self.friendKeyLog, outfile)
+
+    def respondKeyRequest(self, thread_id, thread_type):
         resString = RSAencryption.keyToString(key, 0)
         self.send(Message(text=resString), thread_id=thread_id, thread_type=thread_type)
 
-    def sendEncryptedMsg(self, userID, thread_id, thread_type, msg):
+    def sendEncryptedMsg(self, thread_id, thread_type, msg):
 
-        stringSearch = "user: " + userID + "\n"
-
-        friendKeys = open("friendKeys.txt", "r").read()
-
-        try:
-            keyString = friendKeys.split(stringSearch)[1].split("-----END PUBLIC KEY-----")[0]
-            keyString += "-----END PUBLIC KEY-----"
+        if self.friendKeyLog.get(thread_id) is not None:
+            keyString = self.friendKeyLog[thread_id]
             friendKey = RSAencryption.stringToPublicKey(keyString)
             encryptedMsg = RSAencryption.encryptMessage(msg, friendKey)
 
             self.send(Message(text=encryptedMsg), thread_id=thread_id, thread_type=thread_type)
-        except:
+        else:
             print("public key for this user not found, sending a key request now...")
             print("please try again after the user returns their public key")
-            self.requestUserKey(userID, thread_id, thread_type)
+            self.requestUserKey(thread_id, thread_type)
 
     def searchUsers(self):
         searchResults = self.searchForUsers(input("enter a name: "))
@@ -94,29 +82,63 @@ class Bot(Client):
             print("{}) {}".format(i, result.name))
             i += 1
 
-    def handleMessage(self, messageObject, author_id, thread_id, thread_type, mostRecentFlag):
-        if author_id != self.uid:
+    def handleMessage(self, message, thread, mostRecentFlag):
+        if message.author != self.uid:
 
-            if str(messageObject.text).startswith("-----BEGIN PUBLIC KEY-----") and mostRecentFlag:
+            if str(message.text).startswith("-----BEGIN PUBLIC KEY-----") and mostRecentFlag:
                 # handle errors
-                self.processKeyReturn(author_id, thread_type, thread_type, messageObject.text)
+                self.processKeyReturn(message.author, message.text)
 
-            if str(messageObject.text) == "-----PUBLIC KEY REQUEST-----" and mostRecentFlag:
-                self.respondKeyRequest(author_id, thread_id, thread_type)
+            if str(message.text) == "-----PUBLIC KEY REQUEST-----" and mostRecentFlag:
+                self.respondKeyRequest(thread.uid, thread.type)
                 return
 
         try:
-            decryptedMsg = RSAencryption.decryptMessage(messageObject.text, key)
+            decryptedMsg = RSAencryption.decryptMessage(message.text, key)
             # print("decrypted message: {}".format(decryptedMsg))
             print('"{}" from {} at {} *secured*\n'.format(decryptedMsg,
-                                                          self.fetchUserInfo(messageObject.author).get(
-                                                              messageObject.author).name,
-                                                          messageObject.timestamp))
+                                                          self.fetchUserInfo(message.author).get(
+                                                              message.author).name,
+                                                          message.timestamp))
         except:
-            print('"{}" from {} at {} *unsecured*\n'.format(messageObject.text,
-                                                            self.fetchUserInfo(messageObject.author).get(
-                                                                messageObject.author).name,
-                                                            messageObject.timestamp))
+            print('"{}" from {} at {} *unsecured*\n'.format(message.text,
+                                                            self.fetchUserInfo(message.author).get(
+                                                                message.author).name,
+                                                            message.timestamp))
+
+    def checkMessageLogged(self, thread, message):
+        pass
+
+    def interactiveMessagingThread(self, thread):
+        while 1:
+            print("\n\n\nconversation with {}".format(thread.name))
+
+            # fetch new messages until a pre logged message is found (or until limit of **), then add new messages
+            # to the log
+
+            messages = self.fetchThreadMessages(thread.uid, limit=10)
+            messages.reverse()
+
+            msgNum = 1
+            for message in messages:
+                lastMsgFlag = msgNum == 10
+                self.handleMessage(message, thread, lastMsgFlag)
+                msgNum += 1
+                # print('"{}" from {} at {}\n'.format(message.text,
+                #                                    self.fetchUserInfo(message.author).get(message.author).name,
+                #                                    message.timestamp))  # fix timestamp-ing
+
+            print("\nr) refresh messages... \ns) send message to thread... \nb) go back...")
+            choice2 = input("select an option: ")
+            if choice2 == "r":
+                pass
+            elif choice2 == "s":
+                msg = input("type msg: ")
+                # self.send(Message(text=msg), thread_id=thread.uid, thread_type=thread.type)
+                self.sendEncryptedMsg(thread.uid, thread.type, msg)
+
+            elif choice2 == "b":
+                break
 
     def interactiveMode1(self):
         while 1:
@@ -132,6 +154,10 @@ class Bot(Client):
     def interactiveMode2(self):
         # option to view threads or to search for thread/user (fetch thread list)
         # interact in thread, list recent messages (fetchThreadMessages)
+
+        #listenerThread = threading.Thread(target=self.listen)
+        #listenerThread.start()
+
         while 1:
             print("s) Search...")
             i = 1
@@ -152,31 +178,7 @@ class Bot(Client):
             # check if int
             elif 0 < int(choice) < 11:
                 thread = threads[int(choice) - 1]
-                while 1:
-                    print("\n\n\nconversation with {}".format(thread.name))
-                    messages = self.fetchThreadMessages(thread.uid, limit=10)
-                    messages.reverse()
-
-                    msgNum = 1
-                    for message in messages:
-                        lastMsgFlag = msgNum == 10
-                        self.handleMessage(message, message.author, thread.uid, thread.type, lastMsgFlag)
-                        msgNum += 1
-                        # print('"{}" from {} at {}\n'.format(message.text,
-                        #                                    self.fetchUserInfo(message.author).get(message.author).name,
-                        #                                    message.timestamp))  # fix timestamp-ing
-
-                    print("\nr) refresh messages... \ns) send message to thread... \nb) go back...")
-                    choice2 = input("select an option: ")
-                    if choice2 == "r":
-                        pass
-                    elif choice2 == "s":
-                        msg = input("type msg: ")
-                        # self.send(Message(text=msg), thread_id=thread.uid, thread_type=thread.type)
-                        self.sendEncryptedMsg(thread.uid, thread.uid, thread.type, msg)
-
-                    elif choice2 == "b":
-                        break
+                self.interactiveMessagingThread(thread)
 
 
 def startKey():
@@ -205,9 +207,15 @@ def startUp():
     client = Bot(email, password)
 
     # client.searchUsers()
+    # listenerThread = threading.Thread(target=client.listen())
+    # interactiveThread = threading.Thread(target=client.interactiveMode2())
+    # listenerThread.start()
+    # interactiveThread.start()
+    # client.startListening()
+
+    client.loadKeyLog()
 
     # client.listen()
-
     client.interactiveMode2()
 
 
