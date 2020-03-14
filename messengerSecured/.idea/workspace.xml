@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c72232fe-7045-45e2-a8d2-271b464e41dc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/messageLog.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sessionCookie.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/friendKeys.txt" beforeDir="false" afterPath="$PROJECT_DIR$/friendKeys.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messengerSecured.py" beforeDir="false" afterPath="$PROJECT_DIR$/messengerSecured.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -163,7 +164,8 @@
       <workItem from="1583749986148" duration="1338000" />
       <workItem from="1584081602099" duration="6211000" />
       <workItem from="1584148724165" duration="18000" />
-      <workItem from="1584148819376" duration="4791000" />
+      <workItem from="1584148819376" duration="5714000" />
+      <workItem from="1584163099023" duration="4702000" />
     </task>
     <servers />
   </component>

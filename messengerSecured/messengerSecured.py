@@ -40,6 +40,13 @@ class Bot(Client):
         except json.JSONDecodeError:
             print("no recoverable stored keys in friendKeys.txt")
 
+    def loadMessageLog(self):
+        try:
+            with open('messageLog.txt') as json_file:
+                self.messageLog = json.load(json_file)
+        except json.JSONDecodeError:
+            print("no recoverable stored messages in messageLog.txt")
+
     # message to send to users who dont have their public key in your friendsKeys log
     def requestUserKey(self, thread_id, thread_type):
         reqString = "-----PUBLIC KEY REQUEST-----"
@@ -106,8 +113,25 @@ class Bot(Client):
                                                                 message.author).name,
                                                             message.timestamp))
 
-    def checkMessageLogged(self, thread, message):
-        pass
+    # given a thread, append new messages into the messageLog until a pre-logged message is found, or until limit of x
+    def backLogMessages(self, thread):
+        print("syncing messages...")
+        messages = self.fetchThreadMessages(thread.uid, limit=10)
+
+        messageNumToAdd = -1
+        emptyThreadFlag = self.messageLog.get(thread.uid) is None
+
+        for message in messages:
+            if not emptyThreadFlag:
+                if message.uid == self.messageLog[thread.uid][-1].uid:  # if message id = most recent message in log
+                    break
+            messageNumToAdd += 1
+
+        if emptyThreadFlag:
+            self.messageLog[thread.uid] = []
+
+        for i in range(messageNumToAdd, -1, -1):
+            self.messageLog[thread.uid].append(messages[i])
 
     def interactiveMessagingThread(self, thread):
         while 1:
@@ -115,6 +139,10 @@ class Bot(Client):
 
             # fetch new messages until a pre logged message is found (or until limit of **), then add new messages
             # to the log
+
+            self.backLogMessages(thread)
+
+            print(self.messageLog)
 
             messages = self.fetchThreadMessages(thread.uid, limit=10)
             messages.reverse()
@@ -124,9 +152,6 @@ class Bot(Client):
                 lastMsgFlag = msgNum == 10
                 self.handleMessage(message, thread, lastMsgFlag)
                 msgNum += 1
-                # print('"{}" from {} at {}\n'.format(message.text,
-                #                                    self.fetchUserInfo(message.author).get(message.author).name,
-                #                                    message.timestamp))  # fix timestamp-ing
 
             print("\nr) refresh messages... \ns) send message to thread... \nb) go back...")
             choice2 = input("select an option: ")
@@ -155,8 +180,8 @@ class Bot(Client):
         # option to view threads or to search for thread/user (fetch thread list)
         # interact in thread, list recent messages (fetchThreadMessages)
 
-        #listenerThread = threading.Thread(target=self.listen)
-        #listenerThread.start()
+        # listenerThread = threading.Thread(target=self.listen)
+        # listenerThread.start()
 
         while 1:
             print("s) Search...")
@@ -172,6 +197,8 @@ class Bot(Client):
                 # search functionality here
                 pass
             elif choice == "l":
+                with open('messageLog.txt', 'w') as outfile:  # save msg log
+                    json.dump(self.messageLog, outfile)
                 self.logout()
                 return
                 # fix to exit
@@ -196,15 +223,18 @@ def startUp():
 
     # print(RSAencryption.keyToString(key, 0))
 
-    print("type your email: ")
-    email = input()
+    cookie = dict()
 
-    print("type your password: ")
-    password = getpass.getpass()
+    try:
+        with open('sessionCookie.txt') as json_file:
+            cookie = json.load(json_file)
+    except json.JSONDecodeError:
+        print("no recoverable cookies")
 
-    print("\n\n\n\n\n\n\n\n\n\n")
+    client = Bot(input("type your email: "), getpass.getpass(), session_cookies=cookie)
 
-    client = Bot(email, password)
+    with open('sessionCookie.txt', 'w') as outfile:
+        json.dump(client.getSession(), outfile)
 
     # client.searchUsers()
     # listenerThread = threading.Thread(target=client.listen())
@@ -214,6 +244,7 @@ def startUp():
     # client.startListening()
 
     client.loadKeyLog()
+    client.loadMessageLog()
 
     # client.listen()
     client.interactiveMode2()
