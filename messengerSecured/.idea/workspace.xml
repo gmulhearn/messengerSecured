@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c72232fe-7045-45e2-a8d2-271b464e41dc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/friendKeys.txt" beforeDir="false" afterPath="$PROJECT_DIR$/friendKeys.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messengerSecured.py" beforeDir="false" afterPath="$PROJECT_DIR$/messengerSecured.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sessionCookie.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sessionCookie.txt" afterDir="false" />
     </list>
@@ -28,7 +30,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../playground/messengerSecured-2nd-client" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../playground/django/test_project" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -166,6 +168,13 @@
       <workItem from="1584148819376" duration="5714000" />
       <workItem from="1584163099023" duration="4702000" />
       <workItem from="1584197183713" duration="1727000" />
+      <workItem from="1584243900403" duration="3512000" />
+      <workItem from="1584247572418" duration="743000" />
+      <workItem from="1584249183697" duration="23000" />
+      <workItem from="1584249403924" duration="613000" />
+      <workItem from="1584258116014" duration="4815000" />
+      <workItem from="1584339151169" duration="10832000" />
+      <workItem from="1584431879438" duration="15813000" />
     </task>
     <servers />
   </component>
