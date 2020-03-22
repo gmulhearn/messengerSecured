@@ -9,6 +9,12 @@ from fbchat.models import *
 import urllib.request
 from PIL import Image, ImageTk
 
+# todo
+# - fix recent threads to not disappear temporarily on reloading
+# - figure out images
+
+
+
 LARGE_FONT = ("Verdana", 12)
 
 # client = MS.startUp(input("type your email: "), getpass.getpass())
@@ -54,6 +60,7 @@ class LogInPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
 
+        self.parent = parent
         self.controller = controller
 
         self.configure(bg="white")
@@ -81,7 +88,12 @@ class LogInPage(Frame):
 
     def logIn(self, email, password):
         global client
-        client = MS.startUp(email, password)
+        # print(self.controller.frames.get(RecentThreadsPage))
+        FramesDict = {'LogInPage': self.controller.frames.get(LogInPage),
+                   'RecentThreadsPage': self.controller.frames.get(RecentThreadsPage),
+                   'ThreadPage': self.controller.frames.get(ThreadPage)}
+
+        client = MS.startUp(email, password, Frames=FramesDict)
 
         # print(client.fetchThreadList())
 
@@ -156,6 +168,9 @@ class RecentThreadsPage(Frame):
 
     def onShow(self):
         self.loadThreads()
+
+    def testPrint(self):
+        print("it worked!")
 
 
 class ThreadPage(Frame):

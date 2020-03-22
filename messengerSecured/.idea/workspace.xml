@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c72232fe-7045-45e2-a8d2-271b464e41dc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/friendKeys.txt" beforeDir="false" afterPath="$PROJECT_DIR$/friendKeys.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messageLog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/messageLog.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messengerSecured.py" beforeDir="false" afterPath="$PROJECT_DIR$/messengerSecured.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sessionCookie.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sessionCookie.txt" afterDir="false" />
     </list>
@@ -37,6 +37,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -175,6 +176,8 @@
       <workItem from="1584258116014" duration="4815000" />
       <workItem from="1584339151169" duration="10832000" />
       <workItem from="1584431879438" duration="15813000" />
+      <workItem from="1584859054085" duration="250000" />
+      <workItem from="1584860258790" duration="4433000" />
     </task>
     <servers />
   </component>

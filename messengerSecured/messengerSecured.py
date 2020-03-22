@@ -10,7 +10,7 @@ import json
 # todo:
 # add list of pending requests to verify responses
 # cache messages decrypted! (to avoid lag)
-
+# fetch Messages one by one
 
 key = 0
 
@@ -21,11 +21,16 @@ class Bot(Client):
     friendKeyLog = dict()  # dictionary of threadID paired with public key to encrypt with
 
     # init method to allow bypass of super init, used in GUI.py
-    def __init__(self, email, password, cookies, null):
+    def __init__(self, email, password, cookies, null, Frames=None):
+        self.frames = Frames
+
         if not null:
             super().__init__(email, password, session_cookies=cookies)
         else:
             pass
+
+        if Frames is not None:
+            Frames.get('RecentThreadsPage').testPrint()
 
     def onMessage(self, author_id=None, message_object=None, thread_id=None,
                   thread_type=ThreadType.USER, **kwargs):
@@ -34,10 +39,17 @@ class Bot(Client):
         # add to logged messages
         dictMsg = self.messageToDict(message_object)
         try:
-            self.messageLog[thread_id].append(dictMsg)
+            #self.messageLog[thread_id].append(dictMsg)
+            pass
         except:
-            self.messageLog[thread_id] = []
-            self.messageLog[thread_id].append(dictMsg)
+            #self.messageLog[thread_id] = []
+            #self.messageLog[thread_id].append(dictMsg)
+            pass
+
+        # refresh GUI if there - todo: check what page they're on and dont refresh unnessecerily
+        if self.frames is not None:
+            self.frames.get('RecentThreadsPage').loadThreads()
+            self.frames.get('ThreadPage').showMessages()
 
         # print(self.messageLog)
 
@@ -128,7 +140,7 @@ class Bot(Client):
         try:
             decryptedMsg = RSAencryption.decryptMessage(message.get('text'), key)
             # print("decrypted message: {}".format(decryptedMsg))
-            #print('"{}" from {} at {} *secured*\n'.format(decryptedMsg,
+            # print('"{}" from {} at {} *secured*\n'.format(decryptedMsg,
             #                                              self.fetchUserInfo(message.get('author')).get(
             #                                                  message.get('author')).name,
             #                                              message.get('timestamp')))
@@ -136,7 +148,7 @@ class Bot(Client):
             message['text'] = decryptedMsg
             return message
         except:
-            #print('"{}" from {} at {} *unsecured*\n'.format(message.get('text'),
+            # print('"{}" from {} at {} *unsecured*\n'.format(message.get('text'),
             #                                                self.fetchUserInfo(message.get('author')).get(
             #                                                    message.get('author')).name,
             #                                                message.get('timestamp')))
@@ -256,7 +268,7 @@ def startKey():
 
 
 # initialize the client, cookies, logs, key
-def startUp(email, password):
+def startUp(email, password, Frames=None):
     startKey()
 
     # print(RSAencryption.keyToString(key, 0))
@@ -269,7 +281,7 @@ def startUp(email, password):
     except json.JSONDecodeError:
         print("no recoverable cookies")
 
-    client = Bot(email, password, cookie, False)
+    client = Bot(email, password, cookie, False, Frames=Frames)
 
     with open('sessionCookie.txt', 'w') as outfile:
         json.dump(client.getSession(), outfile)
@@ -277,7 +289,9 @@ def startUp(email, password):
     client.loadKeyLog()
     client.loadMessageLog()
 
-    #client.interactiveMode2()
+    # client.interactiveMode2()
+    listenerThread = threading.Thread(target=client.listen)
+    listenerThread.start()
 
     return client
 
