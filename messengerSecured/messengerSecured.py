@@ -7,10 +7,16 @@ import datetime
 import threading
 import json
 
+# pip install pycryptodome
+# pip install fbchat
+# pip install Pillow
+
+
 # todo:
-# add list of pending requests to verify responses
-# cache messages decrypted! (to avoid lag)
-# fetch Messages one by one
+# - add list of pending requests to verify responses
+# - cache messages decrypted! (to avoid lag)
+# - fetch Messages one by one
+
 
 key = 0
 
@@ -39,11 +45,11 @@ class Bot(Client):
         # add to logged messages
         dictMsg = self.messageToDict(message_object)
         try:
-            #self.messageLog[thread_id].append(dictMsg)
+            # self.messageLog[thread_id].append(dictMsg)
             pass
         except:
-            #self.messageLog[thread_id] = []
-            #self.messageLog[thread_id].append(dictMsg)
+            # self.messageLog[thread_id] = []
+            # self.messageLog[thread_id].append(dictMsg)
             pass
 
         # refresh GUI if there - todo: check what page they're on and dont refresh unnessecerily
@@ -59,6 +65,8 @@ class Bot(Client):
                 self.friendKeyLog = json.load(json_file)
         except json.JSONDecodeError:
             print("no recoverable stored keys in friendKeys.txt")
+        except FileNotFoundError:
+            print("no friendsKeys file found")
 
     def loadMessageLog(self):
         try:
@@ -66,6 +74,8 @@ class Bot(Client):
                 self.messageLog = json.load(json_file)
         except json.JSONDecodeError:
             print("no recoverable stored messages in messageLog.txt")
+        except FileNotFoundError:
+            print("no message log file found")
 
     # convert message fbchat object to dictionary object format for json
     def messageToDict(self, message_object):
@@ -133,6 +143,7 @@ class Bot(Client):
                 return message
 
             if str(message.get('text')) == "-----PUBLIC KEY REQUEST-----" and mostRecentFlag:
+                print("received key request, now responding...")
                 self.respondKeyRequest(thread.uid, thread.type)
                 message['secured'] = False
                 return message
@@ -279,6 +290,8 @@ def startUp(email, password, Frames=None):
         with open('sessionCookie.txt') as json_file:
             cookie = json.load(json_file)
     except json.JSONDecodeError:
+        print("no recoverable cookies")
+    except FileNotFoundError:
         print("no recoverable cookies")
 
     client = Bot(email, password, cookie, False, Frames=Frames)

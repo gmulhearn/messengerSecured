@@ -12,6 +12,15 @@ from PIL import Image, ImageTk
 # todo
 # - fix recent threads to not disappear temporarily on reloading
 # - figure out images
+# - not refresh on EVERY event
+# - fix display lag..
+# - option to send unecncrypted msg
+# - fix code that assumes certain number of messages or threads etc
+# - fix scaling
+# - option to destroy session (logout)
+# - option to log in with session
+# - option to log in without session (logout of previous session!!)
+# - different options for different accounts?
 
 
 
@@ -132,11 +141,22 @@ class RecentThreadsPage(Frame):
         refreshButton = Button(self, text="Refresh", command=self.loadThreads)
         refreshButton.grid(row=0, column=0)
 
-        for i in range(8):
+        # todo: consider less than 8 threads
+        range_length = 8
+        if len(threads) < 8:
+            range_length = len(threads
+                               )
+        for i in range(range_length):
             thread = threads[i]
             self.nameLabel[i] = Label(self, text=thread.name, bg='white', font="bold")
             self.nameLabel[i].bind("<Button-1>", self.clickedThread)
-            text = client.fetchThreadMessages(thread.uid, limit=1)[0].text[0:21]
+
+            text = client.fetchThreadMessages(thread.uid, limit=1)[0].text
+            if text is not None:
+                text = text[0:21]
+            else:
+                text = ""
+
             if len(text) > 20:
                 text += "..."
             # print(text)
@@ -238,13 +258,18 @@ class ThreadPage(Frame):
 
         msgNum = 1
         for message in messages:
-            lastMsgFlag = msgNum == 10
+            lastMsgFlag = msgNum == 10  # todo: can't assume this
             formatedMsg = client.handleMessage(message, thread, lastMsgFlag)
 
             self.senderLabel[msgNum] = Label(self, text=client.fetchUserInfo(formatedMsg.get('author')).get(
                 formatedMsg.get('author')).name + ":", bg='white')
             self.senderLabel[msgNum].grid(row=msgNum, column=0, sticky='w')
-            self.msgLabel[msgNum] = Label(self, text=formatedMsg.get('text').encode("utf-8"), bg='white')
+
+            if formatedMsg.get('text') is None:
+                text = ""
+            else:
+                text = formatedMsg.get('text').encode("utf-8")
+            self.msgLabel[msgNum] = Label(self, text=text, bg='white')
             self.msgLabel[msgNum].grid(row=msgNum, column=1, sticky='w')
 
             encryptionStatus = "!"
