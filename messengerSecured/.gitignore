@@ -2,3 +2,5 @@ friendKeys.txt
 messageLog.txt
 personalKey.pem
 sessionCookie.txt
+__pycache__
+.idea
