@@ -11,6 +11,7 @@ import os
 # pip install pycryptodome
 # pip install fbchat
 # pip install Pillow
+# pip install urllib3
 
 
 # todo:
