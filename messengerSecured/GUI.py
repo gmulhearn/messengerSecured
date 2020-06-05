@@ -33,6 +33,7 @@ LARGE_FONT = ("Verdana", 12)
 # client = MS.startUp(input("type your email: "), getpass.getpass())
 client = MS.Bot("ff", "ff", None, True)
 currentThreadID = 0
+cache_username_author = dict()
 
 
 class MessengerSecuredApp(Tk):
@@ -258,7 +259,7 @@ class ThreadPage(Frame):
         self.showMessages()
 
     def showMessages(self):
-
+        global cache_username_author
         # clear labels!
         for i in range(11):
             self.senderLabel[i].grid_forget()
@@ -278,11 +279,17 @@ class ThreadPage(Frame):
 
         msgNum = 1
         for message in messages:
-            lastMsgFlag = msgNum == 10  # todo: can't assume this
+            lastMsgFlag = msgNum == 10  # todo: can't assume this?
+
             formatedMsg = client.handleMessage(message, thread, lastMsgFlag)
 
-            self.senderLabel[msgNum] = Label(self, text=client.fetchUserInfo(formatedMsg.get('author')).get(
-                formatedMsg.get('author')).name + ":", bg='white')
+            username = cache_username_author.get(formatedMsg.get('author'))
+            if username is None:
+                username = client.fetchUserInfo(formatedMsg.get('author')).get(formatedMsg.get('author')).name
+                cache_username_author[formatedMsg.get('author')] = username
+
+            self.senderLabel[msgNum] = Label(self, text=username + ":")  # client.fetchUserInfo(formatedMsg.get('author')).get(
+            # formatedMsg.get('author')).name + ":", bg='white')
             self.senderLabel[msgNum].grid(row=msgNum, column=0, sticky='w')
 
             if formatedMsg.get('text') is None:

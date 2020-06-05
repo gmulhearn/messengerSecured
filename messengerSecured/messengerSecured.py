@@ -185,6 +185,8 @@ class Bot(Client):
         if emptyThreadFlag:
             self.messageLog[thread.uid] = []
 
+        #print("DEBUG: msg num to add: {}".format(messageNumToAdd))
+
         for i in range(messageNumToAdd, -1, -1):
             self.messageLog[thread.uid].append(self.messageToDict(messages[i]))
 
