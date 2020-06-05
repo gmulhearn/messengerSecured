@@ -6,6 +6,7 @@ import getpass
 import datetime
 import threading
 import json
+import os
 
 # pip install pycryptodome
 # pip install fbchat
@@ -61,7 +62,7 @@ class Bot(Client):
 
     def loadKeyLog(self):
         try:
-            with open('friendKeys.txt') as json_file:
+            with open('user/friendKeys.txt') as json_file:
                 self.friendKeyLog = json.load(json_file)
         except json.JSONDecodeError:
             print("no recoverable stored keys in friendKeys.txt")
@@ -70,7 +71,7 @@ class Bot(Client):
 
     def loadMessageLog(self):
         try:
-            with open('messageLog.txt') as json_file:
+            with open('user/messageLog.txt') as json_file:
                 self.messageLog = json.load(json_file)
         except json.JSONDecodeError:
             print("no recoverable stored messages in messageLog.txt")
@@ -96,7 +97,7 @@ class Bot(Client):
             self.friendKeyLog[threadID] = keyMsg
         print("added key details for thread: {}".format(threadID))
 
-        with open('friendKeys.txt', 'w') as outfile:
+        with open('user/friendKeys.txt', 'w') as outfile:
             json.dump(self.friendKeyLog, outfile)
 
     def respondKeyRequest(self, thread_id, thread_type):
@@ -252,7 +253,7 @@ class Bot(Client):
                 # search functionality here
                 pass
             elif choice == "l":
-                with open('messageLog.txt', 'w') as outfile:  # save msg log
+                with open('user/messageLog.txt', 'w') as outfile:  # save msg log
                     json.dump(self.messageLog, outfile)
                 self.logout()
                 return
@@ -271,15 +272,19 @@ class Bot(Client):
 def startKey():
     global key
     try:
-        key = RSAencryption.importKeyFromFile("personalKey.pem")
+        key = RSAencryption.importKeyFromFile("user/personalKey.pem")
     except:
         key = Crypto.PublicKey.RSA.generate(2048)
-        RSAencryption.exportKeyToFile(key, "personalKey")
+        RSAencryption.exportKeyToFile(key, "user/personalKey")
         print("personal key not found in file 'personalKey.pem', a new key has been generated")
 
 
 # initialize the client, cookies, logs, key
 def startUp(email, password, Frames=None):
+    if not os.path.exists('user'):
+        os.mkdir('user')
+        print("made user directory")
+
     startKey()
 
     # print(RSAencryption.keyToString(key, 0))
@@ -287,7 +292,7 @@ def startUp(email, password, Frames=None):
     cookie = dict()
 
     try:
-        with open('sessionCookie.txt') as json_file:
+        with open('user/sessionCookie.txt') as json_file:
             cookie = json.load(json_file)
     except json.JSONDecodeError:
         print("no recoverable cookies")
@@ -296,7 +301,7 @@ def startUp(email, password, Frames=None):
 
     client = Bot(email, password, cookie, False, Frames=Frames)
 
-    with open('sessionCookie.txt', 'w') as outfile:
+    with open('user/sessionCookie.txt', 'w') as outfile:
         json.dump(client.getSession(), outfile)
 
     client.loadKeyLog()

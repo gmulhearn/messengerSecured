@@ -28,7 +28,6 @@ from PIL import Image, ImageTk
 #   - positioning of messages
 
 
-
 LARGE_FONT = ("Verdana", 12)
 
 # client = MS.startUp(input("type your email: "), getpass.getpass())
@@ -104,8 +103,8 @@ class LogInPage(Frame):
         global client
         # print(self.controller.frames.get(RecentThreadsPage))
         FramesDict = {'LogInPage': self.controller.frames.get(LogInPage),
-                   'RecentThreadsPage': self.controller.frames.get(RecentThreadsPage),
-                   'ThreadPage': self.controller.frames.get(ThreadPage)}
+                      'RecentThreadsPage': self.controller.frames.get(RecentThreadsPage),
+                      'ThreadPage': self.controller.frames.get(ThreadPage)}
 
         client = MS.startUp(email, password, Frames=FramesDict)
 
@@ -195,7 +194,8 @@ class RecentThreadsPage(Frame):
         self.loadThreads()
 
     def testPrint(self):
-        print("it worked!")
+        # print("it worked!")
+        pass
 
 
 class ThreadPage(Frame):
