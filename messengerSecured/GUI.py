@@ -86,6 +86,7 @@ class LogInPage(Frame):
 
         button = Button(self, text="Log In",
                         command=lambda: self.logIn(emailEntry.get(), passwordEntry.get()))
+        cookie_button = Button(self, text="Log In with cookie", command=self.cookie_login)
 
         emailLabel.grid(row=1, column=0, sticky='e', padx=20)
         emailEntry.grid(row=1, column=1, sticky='w', )
@@ -98,6 +99,10 @@ class LogInPage(Frame):
         self.rowconfigure(1, pad=100)
         self.rowconfigure(2, pad=100)
         self.rowconfigure(4, weight=1)
+
+    def cookie_login(self):
+        pass
+        # todo: functionality in messengerSecure.py
 
     def logIn(self, email, password):
         global client
@@ -133,6 +138,13 @@ class RecentThreadsPage(Frame):
             self.nameLabel.append(Label(self))
             self.messageLabel.append(Label(self))
 
+    def logout(self):
+        client.logout()
+        with open('user/sessionCookie.txt', 'w') as f:
+            f.write("")
+
+        self.controller.showFrame(LogInPage)
+
     def loadThreads(self):
         global client
 
@@ -144,6 +156,9 @@ class RecentThreadsPage(Frame):
 
         refreshButton = Button(self, text="Refresh", command=self.loadThreads)
         refreshButton.grid(row=0, column=0)
+
+        logout_button = Button(self, text='Logout', command=self.logout)
+        logout_button.grid(row=0, column=3)
 
         # todo: consider less than 8 threads
         range_length = 8
@@ -290,7 +305,7 @@ class ThreadPage(Frame):
         print("... done.")
 
         print("saving log...")
-        with open('messageLog.txt', 'w') as outfile:  # save msg log
+        with open('user/messageLog.txt', 'w') as outfile:  # save msg log
             json.dump(client.messageLog, outfile)
         print("... done")
 
