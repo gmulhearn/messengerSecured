@@ -12,6 +12,7 @@ from PIL import Image, ImageTk
 # todo
 # - fix recent threads to not disappear temporarily on reloading
 # - figure out images
+# - clean git
 # - not refresh on EVERY event
 # - fix display lag..
 # - option to send unecncrypted msg
