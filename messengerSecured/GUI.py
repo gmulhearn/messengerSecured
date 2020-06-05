@@ -22,6 +22,10 @@ from PIL import Image, ImageTk
 # - option to log in with session
 # - option to log in without session (logout of previous session!!)
 # - different options for different accounts?
+####
+# - GUI
+#   - login error pop up screen
+#   - positioning of messages
 
 
 
