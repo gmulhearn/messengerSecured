@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c72232fe-7045-45e2-a8d2-271b464e41dc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messageLog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/messageLog.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sessionCookie.txt" beforeDir="false" afterPath="$PROJECT_DIR$/sessionCookie.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
