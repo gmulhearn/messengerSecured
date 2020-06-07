@@ -8,4 +8,4 @@ class LogInForm(forms.Form):
 
 class MessageForm(forms.Form):
     message = forms.CharField(label="")
-    encrypted = forms.BooleanField(label="Encrypt?")
+    #encrypted = forms.BooleanField(label="")

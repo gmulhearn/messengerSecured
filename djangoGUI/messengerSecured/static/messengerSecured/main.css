@@ -66,6 +66,10 @@ h1, h2, h3, h4, h5, h6 {
     word-wrap: break-word;
 }
 
+.thread-preview .message p {
+    background-color: rgba(0,0,0,0);
+}
+
 .message h2 {
     padding: 0.5em;
     width: 15%;
@@ -78,21 +82,40 @@ h1, h2, h3, h4, h5, h6 {
     width: 70%;
     background-color: rgba(0,0,0,0.2);
     padding: 1em;
+    border-radius: 5px;
 }
 
 .me .message p {
-    background-color: rgba(6,255,237,0.36)
+    background-color: rgba(6,255,237,0.36);
 }
 
 .msg-bar {
     display: flex;
+    justify-content: space-between;
     background: rgba(0, 0, 0, 1);
     color: rgba(6,255,237,1);
     position: fixed;
     bottom: 0px;
     left: 0px;
-    height: 7.5%;
     width: 100%;
+}
+
+.msg-bar :nth-child(2) {
+    width: 80%
+}
+
+.msg-bar button {
+    margin: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.msg-bar input {
+    width: 100%;
+    height: 1em;
+    margin-left: 1em;
+    padding: 0.5em;
+    border-radius: 10px;
 }
 
 .thread-name {

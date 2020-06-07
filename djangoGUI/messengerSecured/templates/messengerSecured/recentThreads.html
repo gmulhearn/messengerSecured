@@ -6,7 +6,7 @@
 
     <div class = 'message-thread'>
         {% for thread in threads %}
-            <a href = "{% url 'ms-thread' %}?thread_id={{thread.id}}">
+            <a href = "{% url 'ms-thread' %}?thread_id={{thread.id}}#btm">
                 <div class="thread-preview">
                     <div class = 'message'>
                         <h2>{{ thread.name }}</h2>
