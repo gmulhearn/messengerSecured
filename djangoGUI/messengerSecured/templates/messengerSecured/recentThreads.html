@@ -1,0 +1,12 @@
+{% extends "messengerSecured/base.html" %}
+
+{% block content %}
+
+    <h1>Recent Messages</h1>
+
+    {% for thread in threads %}
+        <h2>{{ thread.name }}</h2>
+        <p> {{ thread.text }}</p>
+    {% endfor %}
+
+{% endblock content %}
