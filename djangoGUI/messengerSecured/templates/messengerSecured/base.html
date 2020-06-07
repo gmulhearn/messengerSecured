@@ -16,6 +16,7 @@
 <body>
     <nav id="banner">
         <a href="">messengerSecured</a>
+        <a href="{% url 'ms-recent' %}">Recent Messages</a>
     </nav>
 
 
@@ -26,6 +27,8 @@
             </div>
         {% endfor %}
     {% endif %}{% endcomment %}
-    {% block content %}{% endblock %}
+    <div id = "body-content">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

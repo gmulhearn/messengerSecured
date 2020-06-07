@@ -2,11 +2,25 @@
 
 {% block content %}
 
-    <h1>{{ name }}</h1>
+    <h1 class="thread-name">{{ name }}</h1>
 
-    {% for msg in msgs %}
-        <h2>{{msg.username}}</h2>
-        <p>{{msg.text}}</p>
-    {% endfor %}
+    <div class="message-thread">
+        {% for msg in msgs %}
+            <div class={{ msg.div }}>
+                <div class="message">
+                    <h2>{{ msg.username }}</h2>
+                    <p>{{ msg.text }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div>
+        <form method="POST" class="msg-bar">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="msg-btn" type="submit">Send</button>
+        </form>
+    </div>
 
 {% endblock content %}

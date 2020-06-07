@@ -1,108 +1,107 @@
 body {
-  background: #fafafa;
-  color: #333333;
-  margin-top: 5rem;
+    background: #fafafa;
+    color: #333333;
+    margin-top: 5rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+    color: #444444;
 }
-
-ul {
-  margin: 0;
-}
-
-.bg-steel {
-  background-color: #5f788a;
-}
-
-.site-header .navbar-nav .nav-link {
-  color: #cbd5db;
-}
-
-.site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
-}
-
-.site-header .navbar-nav .nav-link.active {
-  font-weight: 500;
-}
-
-.content-section {
-  background: #ffffff;
-  padding: 10px 20px;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
-  margin-bottom: 20px;
-}
-
-.article-title {
-  color: #444444;
-}
-
-a.article-title:hover {
-  color: #428bca;
-  text-decoration: none;
-}
-
-.article-content {
-  white-space: pre-line;
-}
-
-.article-img {
-  height: 65px;
-  width: 65px;
-  margin-right: 16px;
-}
-
-.article-metadata {
-  padding-bottom: 1px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3
-}
-
-.article-metadata a:hover {
-  color: #333;
-  text-decoration: none;
-}
-
-.article-svg {
-  width: 25px;
-  height: 25px;
-  vertical-align: middle;
-}
-
-.account-img {
-  height: 125px;
-  width: 125px;
-  margin-right: 20px;
-  margin-bottom: 16px;
-}
-
-.account-heading {
-  font-size: 2.5rem;
-}
-
-
-/* mine */
 
 #banner {
-	background: rgba(0, 0, 0, 0.75);
-	position: fixed;
-	top: 0px;
-    left:0px;
-	width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    background: rgba(0, 0, 0, 1);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: 69;
 }
 
 #banner a {
-	display: block;
-	color: white;
-	padding: 1em 1.5em;
-	text-decoration: none;
-	font-weight: bold;
-	-webkit-transition: color 1s;
+    display: block;
+    color: white;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    font-weight: bold;
+    -webkit-transition: color 1s;
+    width: auto;
 }
 
 #banner a:hover {
-	color: rgba(195, 0, 255, 0.75);
+    color: rgba(6,255,237,1)
+}
+
+.message-thread {
+    margin-top: 10%;
+    margin-bottom: 5%;
+}
+
+.thread-preview {
+    transition: background-color 0.5s;
+}
+
+.thread-preview:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.message-thread a {
+    text-decoration: none;
+    color: #333333;
+    transition: background-color 1s;
+    background-color: rgba(0,0,0,0);
+}
+
+.message-thread a:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.me .message {
+    flex-direction: row-reverse;
+}
+
+.message {
+    display: flex;
+    word-wrap: break-word;
+}
+
+.message h2 {
+    padding: 0.5em;
+    width: 15%;
+    align-self: flex-end;
+
+}
+
+.message p {
+    word-wrap: break-word;
+    width: 70%;
+    background-color: rgba(0,0,0,0.2);
+    padding: 1em;
+}
+
+.me .message p {
+    background-color: rgba(6,255,237,0.36)
+}
+
+.msg-bar {
+    display: flex;
+    background: rgba(0, 0, 0, 1);
+    color: rgba(6,255,237,1);
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    height: 7.5%;
+    width: 100%;
+}
+
+.thread-name {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    top: 0px;
+    padding-top: 2em;
+    text-align: center;
+    left: 0px;
+    width: 100%;
 }

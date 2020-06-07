@@ -2,11 +2,19 @@
 
 {% block content %}
 
-    <h1>Recent Messages</h1>
+    <h1 class = 'thread-name'>Recent Messages</h1>
 
-    {% for thread in threads %}
-        <h2>{{ thread.name }}</h2>
-        <p> {{ thread.text }}</p>
-    {% endfor %}
+    <div class = 'message-thread'>
+        {% for thread in threads %}
+            <a href = "{% url 'ms-thread' %}?thread_id={{thread.id}}">
+                <div class="thread-preview">
+                    <div class = 'message'>
+                        <h2>{{ thread.name }}</h2>
+                        <p> {{ thread.text }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
 
 {% endblock content %}

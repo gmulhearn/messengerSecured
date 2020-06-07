@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
-from messengerSecured.forms import LogInForm
+from messengerSecured.forms import LogInForm, MessageForm
 from .functionality import messengerSecured as MS
 import json
 
 client = MS.Bot("ff", "ff", None, True)
+cache_username_author = dict()
 
 
 def home(request):
-    return render(request, 'messengerSecured/home.html')
+    return redirect('ms-login')
+    # return render(request, 'messengerSecured/home.html')
 
 
 def about(request):
@@ -53,9 +55,9 @@ def thread(request):
     global client
 
     thread_id = request.GET.get('thread_id')  # todo: error handle
-
     messages = []
     thread_obj = client.fetchThreadInfo(thread_id).get(thread_id)
+
     name = thread_obj.name
 
     print('processing messages...')
@@ -68,11 +70,21 @@ def thread(request):
     for message in raw_messages:
         last_msg_flag = msg_num == 10  # todo: can't assume this?
 
-        formatted_msg = client.handle_message(message, thread, last_msg_flag)
+        formatted_msg = client.handle_message(message, thread_obj, last_msg_flag)
 
         # temp fix below
-        formatted_msg['username'] = client.fetchUserInfo(formatted_msg.get('author')).get(
-            formatted_msg.get('author')).name
+        username = cache_username_author.get(formatted_msg.get('author'))
+        if username is None:
+            username = client.fetchUserInfo(formatted_msg.get('author')).get(
+                formatted_msg.get('author')).name
+            cache_username_author[formatted_msg.get('author')] = username
+
+        formatted_msg['username'] = username
+
+        formatted_msg['div'] = 'not-me'
+
+        if client.uid == formatted_msg.get('author'):
+            formatted_msg['div'] = 'me'
 
         messages.append(formatted_msg)
 
@@ -85,6 +97,6 @@ def thread(request):
         json.dump(client.message_log, outfile)
     print("... done")
 
-    # print(messages)
+    form = MessageForm(auto_id=False)
 
-    return render(request, 'messengerSecured/thread.html', {'name': name, 'msgs': messages})
+    return render(request, 'messengerSecured/thread.html', {'name': name, 'msgs': messages, 'form': form})
