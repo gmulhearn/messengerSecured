@@ -21,6 +21,7 @@ import os
 
 
 key = 0
+username = ""
 
 
 class Bot(Client):
@@ -64,7 +65,7 @@ class Bot(Client):
 
     def load_key_log(self):
         try:
-            with open('messengerSecured/functionality/user/friendKeys.txt') as json_file:
+            with open(f'messengerSecured/functionality/user-{username}/friendKeys.txt') as json_file:
                 self.friend_key_log = json.load(json_file)
         except json.JSONDecodeError:
             print("no recoverable stored keys in friendKeys.txt")
@@ -73,7 +74,7 @@ class Bot(Client):
 
     def load_message_log(self):
         try:
-            with open('messengerSecured/functionality/user/messageLog.txt') as json_file:
+            with open(f'messengerSecured/functionality/user-{username}/messageLog.txt') as json_file:
                 self.message_log = json.load(json_file)
         except json.JSONDecodeError:
             print("no recoverable stored messages in messageLog.txt")
@@ -99,7 +100,7 @@ class Bot(Client):
             self.friend_key_log[thread_id] = key_msg
         print("added key details for thread: {}".format(thread_id))
 
-        with open('messengerSecured/functionality/user/friendKeys.txt', 'w') as outfile:
+        with open(f'messengerSecured/functionality/user-{username}/friendKeys.txt', 'w') as outfile:
             json.dump(self.friend_key_log, outfile)
 
     def respond_key_request(self, thread_id, thread_type):
@@ -257,7 +258,7 @@ class Bot(Client):
                 # search functionality here
                 pass
             elif choice == "l":
-                with open('messengerSecured/functionality/user/messageLog.txt', 'w') as outfile:  # save msg log
+                with open(f'messengerSecured/functionality/user-{username}/messageLog.txt', 'w') as outfile:  # save msg log
                     json.dump(self.message_log, outfile)
                 self.logout()
                 return
@@ -276,17 +277,20 @@ class Bot(Client):
 def start_key():
     global key
     try:
-        key = RSAencryption.importKeyFromFile("messengerSecured/functionality/user/personalKey.pem")
+        key = RSAencryption.importKeyFromFile(f"messengerSecured/functionality/user-{username}/personalKey.pem")
     except:
         key = Crypto.PublicKey.RSA.generate(2048)
-        RSAencryption.exportKeyToFile(key, "messengerSecured/functionality/user/personalKey")
+        RSAencryption.exportKeyToFile(key, f"messengerSecured/functionality/user-{username}/personalKey")
         print("personal key not found in file 'personalKey.pem', a new key has been generated")
 
 
 # initialize the client, cookies, logs, key
 def start_up(email, password, Frames=None):
-    if not os.path.exists('messengerSecured/functionality/user'):
-        os.mkdir('messengerSecured/functionality/user')
+    global username
+    username = email.split("@")[0]
+
+    if not os.path.exists(f'messengerSecured/functionality/user-{username}'):
+        os.mkdir(f'messengerSecured/functionality/user-{username}')
         print("made user directory")
 
     start_key()
@@ -296,7 +300,7 @@ def start_up(email, password, Frames=None):
     cookie = dict()
 
     try:
-        with open('messengerSecured/functionality/user/sessionCookie.txt') as json_file:
+        with open(f'messengerSecured/functionality/user-{username}/sessionCookie.txt') as json_file:
             cookie = json.load(json_file)
     except json.JSONDecodeError:
         print("no recoverable cookies")
@@ -305,7 +309,7 @@ def start_up(email, password, Frames=None):
 
     client = Bot(email, password, cookie, False, Frames=Frames)
 
-    with open('messengerSecured/functionality/user/sessionCookie.txt', 'w') as outfile:
+    with open(f'messengerSecured/functionality/user-{username}/sessionCookie.txt', 'w') as outfile:
         json.dump(client.getSession(), outfile)
 
     client.load_key_log()

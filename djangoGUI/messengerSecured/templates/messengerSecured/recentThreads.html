@@ -2,14 +2,17 @@
 
 {% block content %}
 
-    <h1 class = 'thread-name'>Recent Messages</h1>
+    <h1 class='thread-name'>Recent Messages</h1>
 
-    <div class = 'message-thread'>
+    <div class='message-thread'>
         {% for thread in threads %}
-            <a href = "{% url 'ms-thread' %}?thread_id={{thread.id}}#btm">
+            <a href="{% url 'ms-thread' %}?thread_id={{ thread.id }}#btm">
                 <div class="thread-preview">
-                    <div class = 'message'>
-                        <h2>{{ thread.name }}</h2>
+                    <div class='message'>
+                        <div class="pic-and-name">
+                            <img src="{{ thread.image }}" alt="profile picture" width="80" height="80" class="profile-pic">
+                            <h2>{{ thread.name }}</h2>
+                        </div>
                         <p> {{ thread.text }}</p>
                     </div>
                 </div>

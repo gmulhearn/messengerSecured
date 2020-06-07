@@ -25,7 +25,6 @@ def login(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            print(f"{email} {password}")
             client = MS.start_up(email, password)
 
             return redirect('ms-recent')
@@ -44,7 +43,7 @@ def recent_threads(request):
 
     for thread in raw_threads:
         text = client.fetchThreadMessages(thread.uid, limit=1)[0].text
-        clean_threads.append({'name': thread.name, 'text': text, 'id': thread.uid})
+        clean_threads.append({'name': thread.name, 'text': text, 'id': thread.uid, 'image': thread.photo})
 
     print(clean_threads)
 
@@ -57,6 +56,21 @@ def thread(request):
     thread_id = request.GET.get('thread_id')  # todo: error handle
     messages = []
     thread_obj = client.fetchThreadInfo(thread_id).get(thread_id)
+
+    # HANDLE POST
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST, auto_id=False)
+
+        if form.is_valid():
+            message = form.cleaned_data.get('message')
+            print(f"{message}")
+
+            client.send_encrypted_msg(thread_obj.uid, thread_obj.type, message)
+    else:
+        form = MessageForm(auto_id=False)
+
+    # PROCESS MESSAGES
 
     name = thread_obj.name
 
@@ -93,10 +107,8 @@ def thread(request):
     print("... done.")
 
     print("saving log...")
-    with open('messengerSecured/functionality/user/messageLog.txt', 'w') as outfile:  # save msg log
+    with open(f'messengerSecured/functionality/user-{MS.username}/messageLog.txt', 'w') as outfile:  # save msg log
         json.dump(client.message_log, outfile)
     print("... done")
-
-    form = MessageForm(auto_id=False)
 
     return render(request, 'messengerSecured/thread.html', {'name': name, 'msgs': messages, 'form': form})
