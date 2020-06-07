@@ -4,7 +4,9 @@ It uses protocols for requesting and storing public keys to associate with frien
 
 The app can be ran with a very minimal tkinter python3+ GUI via messengerSecured/GUI.py, however preferably it is ran with python3+ via djangoGUI/manange.py - `python manage.py runserver`
 
-**IMPORTANT NOTES**
+
+**!IMPORTANT NOTES!**
+
 Since this client uses an unofficial facebook API (fbchat) to comunicate with servers, the following should be done to decrease chances of facebook temporarily locking your account:
 - Enable 2FA on facebook account before using (and then enter in CLI 
 - Test on alt account first
