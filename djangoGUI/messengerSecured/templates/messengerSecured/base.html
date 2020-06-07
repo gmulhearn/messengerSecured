@@ -18,13 +18,14 @@
         <a href="">messengerSecured</a>
     </nav>
 
-    {% if messages %}
+
+{% comment %}    {% if messages %}
         {% for message in messages %}
             <div class="alert">
                 {{ message }}
             </div>
         {% endfor %}
-    {% endif %}
+    {% endif %}{% endcomment %}
     {% block content %}{% endblock %}
 </body>
 </html>

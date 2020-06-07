@@ -1,0 +1,12 @@
+{% extends "messengerSecured/base.html" %}
+
+{% block content %}
+
+    <h1>{{ name }}</h1>
+
+    {% for msg in msgs %}
+        <h2>{{msg.username}}</h2>
+        <p>{{msg.text}}</p>
+    {% endfor %}
+
+{% endblock content %}
