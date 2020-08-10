@@ -1,5 +1,5 @@
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
+from Cryptodome.PublicKey import RSA
+from Cryptodome.Cipher import PKCS1_OAEP
 import binascii
 import base64 as b64
 
@@ -79,7 +79,6 @@ def interactive():
         elif option == "3":
             key = stringToPublicKey(input("enter private key: "))
             print(decryptMessage(input("enter message to decrypt: "), key))
-
 
 # key = RSA.generate(2048)
 # print(keyToString(key, 2))

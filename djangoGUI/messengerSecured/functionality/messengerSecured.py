@@ -1,7 +1,8 @@
 from fbchat import Client, log
 from fbchat.models import *
-import Crypto
+import Cryptodome as Crypto
 from . import RSAencryption
+
 import getpass
 import datetime
 import threading
@@ -258,7 +259,8 @@ class Bot(Client):
                 # search functionality here
                 pass
             elif choice == "l":
-                with open(f'messengerSecured/functionality/user-{username}/messageLog.txt', 'w') as outfile:  # save msg log
+                with open(f'messengerSecured/functionality/user-{username}/messageLog.txt',
+                          'w') as outfile:  # save msg log
                     json.dump(self.message_log, outfile)
                 self.logout()
                 return
