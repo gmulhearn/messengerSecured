@@ -31,8 +31,7 @@ This application is best ran through a virtual environment on python 3+
 
 This app can also be ran with the minimal tkinter GUI found inside messengerSecured/GUI.py, however the djangoGUI is preferred
 
-
-**!IMPORTANT NOTES!**
+## Important Notes
 
 Since this client uses an unofficial facebook API (fbchat) to comunicate with servers, the following actions are reccomended to decrease chances of facebook temporarily locking your account:
 - Enable 2FA on facebook account before using
