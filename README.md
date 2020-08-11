@@ -16,3 +16,4 @@ Since this client uses an unofficial facebook API (fbchat) to comunicate with se
 - Do not spam create sessions
 - Do not spam messages
 
+## Installation Process
