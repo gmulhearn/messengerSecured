@@ -5,6 +5,8 @@ It uses custom protocols for requesting and storing public keys to associate wit
 
 Encryption keys are held only locally to allow for completely secure messaging through facebook servers.
 
+## Demonstration
+[![messenger secured Demo](http://img.youtube.com/vi/ayRZZGDJK9c/0.jpg)](http://www.youtube.com/watch?v=ayRZZGDJK9c "messengerSecured Demo")
 
 ## Requirements
 1. Python 3+ 
