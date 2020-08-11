@@ -31,7 +31,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #banner a:hover {
-    color: rgba(6, 255, 237, 1)
+    color: rgba(6, 255, 237, 1);
+}
+
+#banner a:last-child {
+    margin-left: auto;
 }
 
 .login {

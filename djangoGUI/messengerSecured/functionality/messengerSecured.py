@@ -9,12 +9,6 @@ import threading
 import json
 import os
 
-# pip install pycryptodome
-# pip install fbchat
-# pip install Pillow
-# pip install urllib3
-
-
 # todo:
 # - add list of pending requests to verify responses
 # - cache messages decrypted! (to avoid lag)
